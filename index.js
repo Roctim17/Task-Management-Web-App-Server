@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require('cors');
 require('dotenv').config();
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -47,10 +47,23 @@ async function run() {
             return res.send(result);
         })
         app.post('/member', async (req, res) => {
-            const data = req.body;
-            const result = await memberCollection.insertOne(data);
-            return res.send(result);
+            const newMember = req.body;
+            const query = { email: newMember.email }
+            const exists = await memberCollection.findOne(query);
+            if (exists) {
+                return res.send({ success: false, newMember: exists })
+            }
+            const result = await memberCollection.insertOne(newMember);
+            return res.send({ success: true, result });
         })
+
+        app.delete("/createTask/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await taskCollection.deleteOne(query);
+            res.send(result);
+        });
+
     }
     finally {
 
