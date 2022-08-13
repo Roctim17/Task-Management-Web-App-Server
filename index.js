@@ -19,6 +19,7 @@ async function run() {
         const memberCollection = client.db('task_management').collection('members');
         const taskCollection = client.db('task_management').collection('tasks');
 
+        // get api
 
         app.get('/member', async (req, res) => {
             const query = {};
@@ -26,10 +27,28 @@ async function run() {
             const members = await cursor.toArray();
             res.send(members)
         })
-        app.post('/createTask', async (req, res) => {
+        app.get("/createTask", async (req, res) => {
+            const task = await taskCollection.find({}).toArray();
+            res.send(task);
+        });
+
+        app.get('/createTask/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const tasks = await taskCollection.find(query).toArray();
+            res.send(tasks);
+        });
+
+        // Post Api 
+        //  Add new task api 
+        app.post('/createTask/:email', async (req, res) => {
             const data = req.body;
-            // const query = { title: createTask.title, member: createTask.member, description: createTask.description }
             const result = await taskCollection.insertOne(data);
+            return res.send(result);
+        })
+        app.post('/member', async (req, res) => {
+            const data = req.body;
+            const result = await memberCollection.insertOne(data);
             return res.send(result);
         })
     }
