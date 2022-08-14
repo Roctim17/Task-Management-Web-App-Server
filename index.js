@@ -46,6 +46,31 @@ async function run() {
             const result = await taskCollection.insertOne(data);
             return res.send(result);
         })
+
+        app.put("/updatedTask/:id", async (req, res) => {
+            const id = req.params.id;
+            const data = req.body;
+            const filter = { _id: ObjectId(id) };
+            const option = { upsert: true };
+            const updatedData = {
+                $set: data,
+            };
+            const result = await taskCollection.updateOne(filter, updatedData, option);
+            res.send(result);
+        });
+        app.put("/member/:id", async (req, res) => {
+            const id = req.params.id;
+            const data = req.body;
+            const filter = { _id: ObjectId(id) };
+            const option = { upsert: true };
+            const updatedData = {
+                $set: data,
+            };
+            const result = await memberCollection.updateOne(filter, updatedData, option);
+            res.send(result);
+        });
+
+        //  Add new Member api 
         app.post('/member', async (req, res) => {
             const newMember = req.body;
             const query = { email: newMember.email }
@@ -53,16 +78,26 @@ async function run() {
             if (exists) {
                 return res.send({ success: false, newMember: exists })
             }
-            const result = await memberCollection.insertOne(newMember);
+            const result = await memberCollection.insertOne(newMember)
             return res.send({ success: true, result });
         })
-
+        // Delete API
+        // Delete API Task
         app.delete("/createTask/:id", async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const result = await taskCollection.deleteOne(query);
             res.send(result);
         });
+        // Delete API Member
+        app.delete("/member/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await memberCollection.deleteOne(query);
+            res.send(result);
+        });
+
+
 
     }
     finally {
