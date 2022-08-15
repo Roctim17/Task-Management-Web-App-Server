@@ -29,12 +29,12 @@ async function run() {
         });
 
         // get task with particular user
-        app.get('/createTask/:email', async (req, res) => {
-            const email = req.params.email;
-            const query = { email: email };
-            const tasks = await taskCollection.find(query).toArray();
-            res.send(tasks);
-        });
+        // app.get('/createTask/:email', async (req, res) => {
+        //     const email = req.params.email;
+        //     const query = { email: email };
+        //     const tasks = await taskCollection.find(query).toArray();
+        //     res.send(tasks);
+        // });
         //get member to all user
         app.get('/member', async (req, res) => {
             const query = {};
@@ -44,13 +44,13 @@ async function run() {
         })
 
         // get member with particular user
-        app.get('/member/:email', async (req, res) => {
-            const email = req.params.email;
-            const query = { email: email };
-            const cursor = memberCollection.find(query);
-            const members = await cursor.toArray();
-            res.send(members)
-        })
+        // app.get('/member/:email', async (req, res) => {
+        //     const email = req.params.email;
+        //     const query = { email: email };
+        //     const cursor = memberCollection.find(query);
+        //     const members = await cursor.toArray();
+        //     res.send(members)
+        // })
 
         // get task with id api
         app.get("/createTask/:id", async (req, res) => {
